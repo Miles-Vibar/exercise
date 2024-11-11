@@ -21,7 +21,6 @@ class LocationCubit extends Cubit<StateModel> {
   Future<void> getRegions() async {
     if (regionsList == null) {
       await SharedPreferences.getInstance().then((prefs) async {
-        print('opened shared preferences');
         final jsonString = prefs.getString('jsonString');
 
         if (jsonString == null) {
@@ -34,14 +33,12 @@ class LocationCubit extends Cubit<StateModel> {
             await prefs.setString('jsonString', r.body);
           });
         } else {
-          print('getting jsonString');
           regionsList =  RegionsList.fromJson(jsonDecode(jsonString));
           filterProvinces(null);
           filterCities(null);
           filterBarangays(null);
         }
 
-        regionsList = RegionsList(regions: <Region>[]);
         emit(state);
       });
     }
