@@ -1,9 +1,10 @@
-import 'package:address_app/BLoC/LocationCubit.dart';
+import 'package:address_app/bloc/address_bloc/address_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../Models/StateModel.dart';
-import '../Widgets/DropDownWidget.dart';
+import '../bloc/address_bloc/address_bloc.dart';
+import '../bloc/address_bloc/address_state.dart';
+import '../widgets/drop_down_widget.dart';
 
 class AddressPage extends StatefulWidget {
   const AddressPage({super.key});
@@ -24,7 +25,7 @@ class _AddressPageState extends State<AddressPage> {
       appBar: AppBar(
         title: const Text('Address'),
       ),
-      body: BlocBuilder<LocationCubit, StateModel>(
+      body: BlocBuilder<AddressBloc, AddressState>(
         builder: (context, state) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -32,48 +33,52 @@ class _AddressPageState extends State<AddressPage> {
               children: [
                 DropDownWidget(
                   label: "Region",
-                  location: context.read<LocationCubit>().regionsList?.regions,
+                  location: state.regionsList?.regions,
                   controller: regionController,
-                  function: context.read<LocationCubit>().getRegions(),
                   onChanged: (String value) {
-                    context.read<LocationCubit>().filterProvinces(value);
+                    context.read<AddressBloc>().add(GetProvincesEvent(region: value));
                     provinceController.clear();
                     cityController.clear();
                     barangayController.clear();
                   },
                 ),
-                const SizedBox(height: 4.0,),
+                const SizedBox(
+                  height: 4.0,
+                ),
                 DropDownWidget(
                   label: "Province",
-                  location: context.read<LocationCubit>().provincesList,
+                  location: state.provincesList,
                   controller: provinceController,
-                  function: context.read<LocationCubit>().getRegions(),
                   onChanged: (String value) {
-                    context.read<LocationCubit>().filterCities(value);
+                    context.read<AddressBloc>().add(GetCitiesEvent(province: value));
                     cityController.clear();
                     barangayController.clear();
                   },
                 ),
-                const SizedBox(height: 4.0,),
+                const SizedBox(
+                  height: 4.0,
+                ),
                 DropDownWidget(
                   label: "City",
-                  location: context.read<LocationCubit>().citiesList,
+                  location: state.citiesList,
                   controller: cityController,
-                  function: context.read<LocationCubit>().getRegions(),
                   onChanged: (String value) {
-                    context.read<LocationCubit>().filterBarangays(value);
+                    context.read<AddressBloc>().add(GetBarangaysEvent(city: value));
                     barangayController.clear();
                   },
                 ),
-                const SizedBox(height: 4.0,),
+                const SizedBox(
+                  height: 4.0,
+                ),
                 DropDownWidget(
                   label: "Barangay",
-                  location: context.read<LocationCubit>().barangaysList,
+                  location: state.barangaysList,
                   controller: barangayController,
-                  function: context.read<LocationCubit>().getRegions(),
                   onChanged: (String value) => (),
                 ),
-                const SizedBox(height: 4.0,),
+                const SizedBox(
+                  height: 4.0,
+                ),
               ],
             ),
           );

@@ -1,4 +1,4 @@
-import 'package:address_app/BLoC/LocationBlocProvider.dart';
+import 'package:address_app/pages/address_bloc_provider.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Locationblocprovider(),
+      home: const LocationBlocProvider(),
     );
   }
 }
