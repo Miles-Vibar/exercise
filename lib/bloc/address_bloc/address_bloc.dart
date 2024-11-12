@@ -129,34 +129,3 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     ));
   }
 }
-
-class LocationCubit extends Cubit<AddressState> {
-  LocationCubit(super.initialState);
-
-  RegionsList? regionsList;
-  List<Province>? provincesList;
-  List<City>? citiesList;
-  List<Barangay>? barangaysList;
-
-  Future<void> getRegions() async {
-    if (regionsList == null) {
-      await SharedPreferences.getInstance().then((prefs) async {
-        final jsonString = prefs.getString('jsonString');
-
-        if (jsonString == null) {
-          await http
-              .get(Uri.parse(
-              'https://raw.githubusercontent.com/tarkiedev1/exercise/refs/heads/main/address_ph.json'))
-              .then((r) async {
-            regionsList = RegionsList.fromJson(jsonDecode(r.body));
-            await prefs.setString('jsonString', r.body);
-          });
-        } else {
-          regionsList = RegionsList.fromJson(jsonDecode(jsonString));
-        }
-
-        emit(state);
-      });
-    }
-  }
-}
