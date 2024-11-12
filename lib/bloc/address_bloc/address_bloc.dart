@@ -101,7 +101,6 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
             : state.citiesList
                 ?.expand((c) => c.barangays ?? <Barangay>[])
                 .toList()));
-    print('region: ${state.region}; p: ${state.province}; c: ${state.city}');
   }
 }
 

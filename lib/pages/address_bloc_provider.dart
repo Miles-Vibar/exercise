@@ -4,8 +4,6 @@ import 'package:address_app/bloc/address_bloc/address_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/address_bloc/address_state.dart';
-
 class LocationBlocProvider extends StatelessWidget {
   const LocationBlocProvider({super.key});
 
