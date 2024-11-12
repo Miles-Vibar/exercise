@@ -72,8 +72,6 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
   void filterProvinces(String? region) {
     emit(state.update(
         region: region,
-        province: null,
-        city: null,
         provincesList: region != null
             ? state.regionsList?.regions
                 ?.firstWhere((r) => r.name == region)
@@ -81,19 +79,18 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
             : state.regionsList?.regions
                 ?.expand((r) => r.provinces ?? <Province>[])
                 .toList()));
-    filterCities(state.province);
+    filterCities(null);
   }
 
   void filterCities(String? province) {
     emit(state.update(
         province: province,
-        city: null,
         citiesList: province != null
             ? state.provincesList?.firstWhere((p) => p.name == province).cities
             : state.provincesList
                 ?.expand((p) => p.cities ?? <City>[])
                 .toList()));
-    filterBarangays(state.city);
+    filterBarangays(null);
   }
 
   void filterBarangays(String? city) {

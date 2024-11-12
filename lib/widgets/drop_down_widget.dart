@@ -1,3 +1,4 @@
+import 'package:address_app/models/address_model.dart';
 import 'package:flutter/material.dart';
 
 class DropDownWidget extends StatefulWidget {
@@ -51,12 +52,12 @@ class _DropDownWidgetState extends State<DropDownWidget> {
             .toList();
 
         return list.isEmpty ? ['No entry found!']
-                .map((location) => DropdownMenuEntry(
-                      enabled: false,
-                      value: location,
-                      label: location,
-                    ))
-                .toList()
+            .map((location) => DropdownMenuEntry(
+          enabled: false,
+          value: location,
+          label: location,
+        ))
+            .toList()
             : list;
       },
       hintText: 'Showing first 10 entries...',
