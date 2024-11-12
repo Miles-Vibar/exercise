@@ -9,6 +9,7 @@ class AddressState extends Equatable {
   final String? region;
   final String? province;
   final String? city;
+  final String? barangay;
   final RegionsList? regionsList;
   final List<Province>? provincesList;
   final List<City>? citiesList;
@@ -18,6 +19,7 @@ class AddressState extends Equatable {
     required this.region,
     required this.province,
     required this.city,
+    required this.barangay,
     required this.regionsList,
     required this.provincesList,
     required this.citiesList,
@@ -28,6 +30,7 @@ class AddressState extends Equatable {
     final String? region,
     final String? province,
     final String? city,
+    final String? barangay,
     final RegionsList? regionsList,
     final List<Province>? provincesList,
     final List<City>? citiesList,
@@ -37,6 +40,7 @@ class AddressState extends Equatable {
         region: region ?? this.region,
         province: province ?? this.province,
         city: city ?? this.city,
+        barangay: barangay ?? this.barangay,
         regionsList: regionsList ?? this.regionsList,
         provincesList: provincesList ?? this.provincesList,
         citiesList: citiesList ?? this.citiesList,
@@ -49,6 +53,7 @@ class AddressState extends Equatable {
         region,
         province,
         city,
+        barangay,
         regionsList,
         provincesList,
         citiesList,

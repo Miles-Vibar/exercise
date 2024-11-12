@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:address_app/bloc/address_bloc/address_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +29,10 @@ class _AddressPageState extends State<AddressPage> {
       ),
       body: BlocBuilder<AddressBloc, AddressState>(
         builder: (context, state) {
+          if (state.region != null) regionController.text = state.region!;
+          if (state.province != null) provinceController.text = state.province!;
+          if (state.city != null) cityController.text = state.city!;
+
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView(
@@ -74,7 +80,9 @@ class _AddressPageState extends State<AddressPage> {
                   label: "Barangay",
                   location: state.barangaysList,
                   controller: barangayController,
-                  onChanged: (String value) => (),
+                  onChanged: (String value) {
+                    context.read<AddressBloc>().add(InsertMissingFieldsEvent(barangay: value));
+                  },
                 ),
                 const SizedBox(
                   height: 4.0,

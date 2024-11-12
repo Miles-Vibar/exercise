@@ -19,3 +19,9 @@ class GetBarangaysEvent extends AddressEvent {
 
   GetBarangaysEvent({required this.city});
 }
+
+class InsertMissingFieldsEvent extends AddressEvent {
+  final String barangay;
+
+  InsertMissingFieldsEvent({required this.barangay});
+}

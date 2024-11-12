@@ -19,6 +19,7 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
       region: null,
       province: null,
       city: null,
+      barangay: null,
       regionsList: null,
       provincesList: null,
       citiesList: null,
@@ -45,6 +46,7 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     on<GetProvincesEvent>((event, emit) => filterProvinces(event.region));
     on<GetCitiesEvent>((event, emit) => filterCities(event.province));
     on<GetBarangaysEvent>((event, emit) => filterBarangays(event.city));
+    on<InsertMissingFieldsEvent>((event, emit) => insertMissingFields(event.barangay));
   }
 
   void getAll(File file) {
@@ -84,23 +86,47 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
 
   void filterCities(String? province) {
     emit(state.update(
+        region: province == null ? null : getRegion(province),
         province: province,
         citiesList: province != null
             ? state.provincesList?.firstWhere((p) => p.name == province).cities
             : state.provincesList
                 ?.expand((p) => p.cities ?? <City>[])
-                .toList()));
+                .toList(),
+    ));
     filterBarangays(null);
   }
+  
+  String? getRegion(String? province) => state.regionsList?.regions?.firstWhere((r) => r.provinces!.map((p) => p.name).contains(province)).name;
+
+  String? getProvince(String? city) => state.provincesList?.firstWhere((p) => p.cities!.map((c) => c.name).contains(city)).name;
 
   void filterBarangays(String? city) {
+    final province = city == null ? null : getProvince(city);
+    
     emit(state.update(
+        region: city == null ? null : getRegion(province),
+        province: province,
         city: city,
         barangaysList: city != null
             ? state.citiesList?.firstWhere((c) => c.name == city).barangays
             : state.citiesList
                 ?.expand((c) => c.barangays ?? <Barangay>[])
                 .toList()));
+  }
+
+  void insertMissingFields(String barangay) {
+    final city = state.citiesList?.firstWhere((c) => c.barangays!.map((b) => b.name).contains(barangay)).name;
+    final province = getProvince(city);
+    final region = getRegion(province);
+
+    emit(state.update(
+      region: region,
+      province: province,
+      city: city,
+      barangay: barangay,
+      barangaysList: state.citiesList?.firstWhere((c) => c.name == city).barangays,
+    ));
   }
 }
 

@@ -19,6 +19,7 @@ class DropDownWidget extends StatefulWidget {
 }
 
 class _DropDownWidgetState extends State<DropDownWidget> {
+  final focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
               .toList(),
       menuHeight: 300.0,
       enableFilter: true,
-      focusNode: FocusNode(),
+      focusNode: focusNode,
       controller: widget.controller,
       enableSearch: true,
       expandedInsets: EdgeInsets.zero,
