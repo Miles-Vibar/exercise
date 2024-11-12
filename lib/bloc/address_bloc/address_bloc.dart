@@ -6,7 +6,6 @@ import 'package:address_app/Models/region.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../../Models/city.dart';
@@ -88,6 +87,8 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     emit(state.update(
         region: province == null ? null : getRegion(province),
         province: province,
+        city: null,
+        barangay: null,
         citiesList: province != null
             ? state.provincesList?.firstWhere((p) => p.name == province).cities
             : state.provincesList
@@ -108,6 +109,7 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
         region: city == null ? null : getRegion(province),
         province: province,
         city: city,
+        barangay: null,
         barangaysList: city != null
             ? state.citiesList?.firstWhere((c) => c.name == city).barangays
             : state.citiesList

@@ -37,10 +37,10 @@ class AddressState extends Equatable {
     final List<Barangay>? barangaysList,
   }) =>
       AddressState(
-        region: region ?? this.region,
-        province: province ?? this.province,
-        city: city ?? this.city,
-        barangay: barangay ?? this.barangay,
+        region: region,
+        province: province,
+        city: city,
+        barangay: barangay,
         regionsList: regionsList ?? this.regionsList,
         provincesList: provincesList ?? this.provincesList,
         citiesList: citiesList ?? this.citiesList,
