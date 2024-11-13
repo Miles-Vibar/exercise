@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:address_app/bloc/address_bloc/address_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +25,11 @@ class _AddressPageState extends State<AddressPage> {
       appBar: AppBar(
         title: const Text('Address'),
       ),
-      body: BlocBuilder<AddressBloc, AddressState>(
+      body: BlocConsumer<AddressBloc, AddressState>(
+        listenWhen: (prev, curr) => prev.isLoading != curr.isLoading,
+        listener: (context, state) {
+          print(state.isLoading);
+        },
         builder: (context, state) {
           if (state.region != null) regionController.text = state.region!;
           if (state.province != null) provinceController.text = state.province!;
@@ -42,7 +44,9 @@ class _AddressPageState extends State<AddressPage> {
                   location: state.regionsList?.regions,
                   controller: regionController,
                   onChanged: (String value) {
-                    context.read<AddressBloc>().add(GetProvincesEvent(region: value));
+                    context
+                        .read<AddressBloc>()
+                        .add(GetProvincesEvent(region: value));
                     provinceController.clear();
                     cityController.clear();
                     barangayController.clear();
@@ -56,7 +60,9 @@ class _AddressPageState extends State<AddressPage> {
                   location: state.provincesList,
                   controller: provinceController,
                   onChanged: (String value) {
-                    context.read<AddressBloc>().add(GetCitiesEvent(province: value));
+                    context
+                        .read<AddressBloc>()
+                        .add(GetCitiesEvent(province: value));
                     cityController.clear();
                     barangayController.clear();
                   },
@@ -69,7 +75,9 @@ class _AddressPageState extends State<AddressPage> {
                   location: state.citiesList,
                   controller: cityController,
                   onChanged: (String value) {
-                    context.read<AddressBloc>().add(GetBarangaysEvent(city: value));
+                    context
+                        .read<AddressBloc>()
+                        .add(GetBarangaysEvent(city: value));
                     barangayController.clear();
                   },
                 ),
@@ -81,7 +89,9 @@ class _AddressPageState extends State<AddressPage> {
                   location: state.barangaysList,
                   controller: barangayController,
                   onChanged: (String value) {
-                    context.read<AddressBloc>().add(InsertMissingFieldsEvent(barangay: value));
+                    context
+                        .read<AddressBloc>()
+                        .add(InsertMissingFieldsEvent(barangay: value));
                   },
                 ),
                 const SizedBox(

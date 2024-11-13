@@ -1,7 +1,7 @@
 import 'province.dart';
 
 class Region {
-  final String id;
+  final int? id;
   final String name;
   final List<Province>? provinces;
 
@@ -13,7 +13,7 @@ class Region {
 
   factory Region.fromJson(Map<String, dynamic> json) {
     return Region(
-      id: json['id'],
+      id: int.tryParse(json['id'].toString() ?? ''),
       name: json['name'],
       provinces: json['province'] != null
           ? List<Province>.from(
@@ -21,6 +21,22 @@ class Region {
           : null,
     );
   }
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+      };
+
+  Region copy({
+    int? id,
+    String? name,
+    List<Province>? provinces,
+  }) =>
+      Region(
+        id: id,
+        name: name ?? this.name,
+        provinces: provinces,
+      );
 }
 
 class RegionsList {

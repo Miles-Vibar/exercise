@@ -1,11 +1,12 @@
-import 'package:address_app/Models/province.dart';
-import 'package:address_app/Models/region.dart';
+import 'package:address_app/models/province.dart';
+import 'package:address_app/models/region.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../Models/barangay.dart';
-import '../../Models/city.dart';
+import '../../models/barangay.dart';
+import '../../models/city.dart';
 
 class AddressState extends Equatable {
+  final bool? isLoading;
   final String? region;
   final String? province;
   final String? city;
@@ -16,6 +17,7 @@ class AddressState extends Equatable {
   final List<Barangay>? barangaysList;
 
   const AddressState({
+    required this.isLoading,
     required this.region,
     required this.province,
     required this.city,
@@ -27,6 +29,7 @@ class AddressState extends Equatable {
   });
 
   AddressState update({
+    final bool isLoading = false,
     final String? region,
     final String? province,
     final String? city,
@@ -37,6 +40,7 @@ class AddressState extends Equatable {
     final List<Barangay>? barangaysList,
   }) =>
       AddressState(
+        isLoading: isLoading,
         region: region,
         province: province,
         city: city,
