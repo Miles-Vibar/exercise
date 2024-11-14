@@ -27,10 +27,8 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
         )) {
     on<GetAllEvent>((event, emit) async {
       await db.getAll().then((value) async {
-        print(event.toString());
         emit(state.update(isLoading: true));
         if (value.regions?.isEmpty ?? false) {
-          print('empty');
           await http
               .get(Uri.parse(
                   'https://raw.githubusercontent.com/tarkiedev1/exercise/refs/heads/main/address_ph.json'))
@@ -41,31 +39,8 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
             ));
             filterProvinces(state.region);
 
-            for (Region region in state.regionsList?.regions ?? <Region>[]) {
-              final r = await db.addRegion(region.copy());
+            await db.addAll(state.regionsList?.regions ?? <Region>[]);
 
-              for (Province province in state.regionsList?.regions!
-                      .firstWhere((r) => r.name == region.name)
-                      .provinces ??
-                  <Province>[]) {
-                final p = await db.addProvince(province, r.id!);
-
-                for (City city in state.provincesList
-                        ?.firstWhere((p) => p.name == province.name)
-                        .cities ??
-                    <City>[]) {
-                  final c = await db.addCity(city, p.id!);
-
-                  for (Barangay barangay in state.citiesList
-                          ?.firstWhere((c) => c.name == city.name)
-                          .barangays ??
-                      <Barangay>[]) {
-                    final b = await db.addBarangay(barangay, c.id!);
-                    print(b.name);
-                  }
-                }
-              }
-            }
             emit(state.update());
           });
         }

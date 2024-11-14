@@ -31,7 +31,7 @@ class AddressSqliteDatabase {
       version: 2,
       onCreate: (db, version) async {
         await db.execute(
-            'CREATE TABLE regions (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)'
+            'CREATE TABLE regions (id INTEGER PRIMARY KEY AUTOINCREMENT, region_id TEXT NOT NULL, name TEXT NOT NULL)'
         );
         await db.execute(
             'CREATE TABLE provinces (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, region_id INTEGER, FOREIGN KEY (region_id) REFERENCES regions (id))'
@@ -54,27 +54,36 @@ class AddressSqliteDatabase {
     return region.copy(id: id);
   }
 
-  Future<Province> addProvince(Province province, int foreignKey) async {
+  Future<void> addAll(List<Region> regions) async {
     final db = await instance.database;
-    final id = await db.insert('provinces', province.toJson(foreignKey));
+    int regionIndex = 0;
+    int provinceIndex = 0;
+    int cityIndex = 0;
+    print('adding all');
 
-    return province.copy(id: id);
-  }
+    await db.transaction((t) async {
+      final batch = t.batch();
+      for (Region r in regions) {
+        regionIndex++;
+        batch.insert('regions', r.toJson());
 
-  Future<City> addCity(City city, int foreignKey) async {
-    final db = await instance.database;
-    final id = await db.transaction((t) async =>
-    await t.insert('cities', city.toJson(foreignKey)));
+        for (Province p in r.provinces!) {
+          provinceIndex++;
+          batch.insert('provinces', p.toJson(regionIndex));
 
-    return city.copy(id: id);
-  }
+          for (City c in p.cities!) {
+            cityIndex++;
+            batch.insert('cities', c.toJson(provinceIndex));
 
-  Future<Barangay> addBarangay(Barangay barangay, int foreignKey) async {
-    final db = await instance.database;
-    final id = await db.transaction((t) async =>
-    await t.insert('barangays', barangay.toJson(foreignKey)));
+            for (Barangay b in c.barangays!) {
+              batch.insert('barangays', b.toJson(cityIndex));
+            }
+          }
+        }
+      }
 
-    return barangay.copy(id: id);
+      await batch.commit();
+    });
   }
 
   Future<RegionsList> getAll() async {
