@@ -59,7 +59,6 @@ class AddressSqliteDatabase {
     int regionIndex = 0;
     int provinceIndex = 0;
     int cityIndex = 0;
-    print('adding all');
 
     await db.transaction((t) async {
       final batch = t.batch();
