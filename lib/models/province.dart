@@ -13,7 +13,7 @@ class Province {
 
   factory Province.fromJson(Map<String, dynamic> json) {
     return Province(
-      id: int.tryParse(json['id'] ?? ''),
+      id: json['id'],
       name: json['name'],
       cities: json['city'] != null
           ? List<City>.from(json['city'].map((x) => City.fromJson(x)))

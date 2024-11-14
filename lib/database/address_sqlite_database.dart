@@ -6,7 +6,8 @@ import '../models/province.dart';
 import '../models/region.dart';
 
 class AddressSqliteDatabase {
-  static final AddressSqliteDatabase instance = AddressSqliteDatabase._internal();
+  static final AddressSqliteDatabase instance = AddressSqliteDatabase
+      ._internal();
 
   static Database? _database;
 
@@ -48,7 +49,8 @@ class AddressSqliteDatabase {
   Future<Region> addRegion(Region region) async {
     final db = await instance.database;
 
-    final id = await db.transaction((t) async => await t.insert('regions', region.toJson()));
+    final id = await db.transaction((t) async =>
+    await t.insert('regions', region.toJson()));
     return region.copy(id: id);
   }
 
@@ -61,36 +63,40 @@ class AddressSqliteDatabase {
 
   Future<City> addCity(City city, int foreignKey) async {
     final db = await instance.database;
-    final id = await db.transaction((t) async => await t.insert('cities', city.toJson(foreignKey)));
+    final id = await db.transaction((t) async =>
+    await t.insert('cities', city.toJson(foreignKey)));
 
     return city.copy(id: id);
   }
 
   Future<Barangay> addBarangay(Barangay barangay, int foreignKey) async {
     final db = await instance.database;
-    final id = await db.transaction((t) async => await t.insert('barangays', barangay.toJson(foreignKey)));
+    final id = await db.transaction((t) async =>
+    await t.insert('barangays', barangay.toJson(foreignKey)));
 
     return barangay.copy(id: id);
   }
 
   Future<RegionsList> getAll() async {
     final db = await instance.database;
-    // TODO: turn to list of Maps
-    final json = (await db.query('regions')).map((r) async => {
+    // TODO: turn to list of Maps;
+    final barangaysJson = await db.query('barangays');
+    final citiesJson = await db.query('cities');
+    final provincesJson = await db.query('provinces');
+    final json = (await db.query('regions')).map((r) => {
       'id': r['id'],
       'name': r['name'],
-      'provinces': (await db.query('provinces', where: 'region_id = ${r['id']}')).map((p) async => {
+      'province': provincesJson.where((p) => p['region_id'] == r['id']).map((p) => {
         'id': p['id'],
         'name': p['name'],
-        'cities': (await db.query('cities', where: 'province_id = ${p['id']}')).map((c) async => {
+        'city': citiesJson.where((c) => c['province_id'] == p['id']).map((c) => {
           'id': c['id'],
           'name': c['name'],
-          'barangays': (await db.query('barangays', where: 'city_id = ${c['id']}')),
-        }).toList(),
+          'barangay': barangaysJson.where((b) => b['city_id'] == c['id']),
+        }).toList()
       }).toList(),
-    });
+    }).toList();
 
-    print(json);
     return RegionsList.fromJson(json);
   }
 }

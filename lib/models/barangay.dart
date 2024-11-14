@@ -8,7 +8,7 @@ class Barangay {
   });
 
   factory Barangay.fromJson(Map<String, dynamic> json) {
-    return Barangay(id: int.tryParse(json['id'] ?? ''), name: json['name']);
+    return Barangay(id: json['id'], name: json['name']);
   }
 
   factory Barangay.fromJsonList(String json) {

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:address_app/models/barangay.dart';
 import 'package:address_app/models/province.dart';
 import 'package:address_app/models/region.dart';
@@ -30,6 +28,7 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
     on<GetAllEvent>((event, emit) async {
       await db.getAll().then((value) async {
         print(event.toString());
+        emit(state.update(isLoading: true));
         if (value.regions?.isEmpty ?? false) {
           print('empty');
           await http

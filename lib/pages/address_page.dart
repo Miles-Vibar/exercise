@@ -28,7 +28,7 @@ class _AddressPageState extends State<AddressPage> {
       body: BlocConsumer<AddressBloc, AddressState>(
         listenWhen: (prev, curr) => prev.isLoading != curr.isLoading,
         listener: (context, state) {
-          print(state.isLoading);
+          if (state.isLoading != null) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.isLoading! ? 'Loading' : 'Complete')));
         },
         builder: (context, state) {
           if (state.region != null) regionController.text = state.region!;

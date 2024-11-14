@@ -13,7 +13,7 @@ class City {
 
   factory City.fromJson(Map<String, dynamic> json) {
     return City(
-      id: int.tryParse(json['id'] ?? ''),
+      id: json['id'],
       name: json['name'],
       barangays: json['barangay'] != null
           ? List<Barangay>.from(
